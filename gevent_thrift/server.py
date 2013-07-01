@@ -49,9 +49,13 @@ class ThriftServer(StreamServer):
         otrans = self.outputTransportFactory.getTransport(client)
         iprot = self.inputProtocolFactory.getProtocol(itrans)
         oprot = self.outputProtocolFactory.getProtocol(otrans)
+
+        self.log.debug('Client connected')
         try:
             while True:
                 self.processor.process(iprot, oprot)
+        except EOFError:
+          self.log.info('Client disconnected')
         except Exception:
             self.log.exception('exception while processing request'
                                + ' - closing connection')

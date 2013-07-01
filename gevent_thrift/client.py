@@ -25,7 +25,6 @@ from circuit import CircuitBreaker, CircuitOpenError
 from thrift.protocol import TBinaryProtocol
 from thrift.transport import TTransport, TSocket
 
-
 # Logger object in 2.6 do not have getChild.
 def _getChild(log, suffix):
     if hasattr(log, 'getChild'):
@@ -139,7 +138,8 @@ class GeventTSocket(TSocket.TSocket):
                 if res is not res0[-1]:
                     continue
                 else:
-                    raise e
+                    #raise e
+                    raise UnavailableError()
             break
 
 
