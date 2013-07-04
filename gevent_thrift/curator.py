@@ -77,19 +77,20 @@ class ServiceInstance(object):
     def __str__(self):
         return '%s at %s:%d' % (self.id, self.address, self.port)
 
+try:
+  class _CacheLogMonitor(MonitorListener):
+      """Monitor that logs cache updates."""
 
-class _CacheLogMonitor(MonitorListener):
-    """Monitor that logs cache updates."""
+      def __init__(self, log):
+          self.log = log
 
-    def __init__(self, log):
-        self.log = log
+      def created(self, path, data):
+          self.log.info("discovered %s" % (data,))
 
-    def created(self, path, data):
-        self.log.info("discovered %s" % (data,))
-
-    def deleted(self, path):
-        self.log.info("lost %s" % (path,))
-
+      def deleted(self, path):
+          self.log.info("lost %s" % (path,))
+except NameError:
+  pass
 
 class _Cache(object):
     """In-memory list of instances.
